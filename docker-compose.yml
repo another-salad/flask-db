@@ -1,0 +1,28 @@
+version: "3.4"
+
+services:
+  db:
+    image: mysql:latest
+    container_name: mc_server_log_db
+    restart: always
+    environment:
+      - MYSQL_USER_FILE=/run/secrets/user_name
+      - MYSQL_PASSWORD_FILE=/run/secrets/user_pw
+      - MYSQL_ROOT_PASSWORD_FILE=/run/secrets/root_pw
+    secrets:
+      - user_name
+      - user_pw
+      - root_pw
+    ports:
+      - "3306:3306"
+    volumes:
+      - ./db_init:/docker-entrypoint-initdb.d/:ro
+      - ./db_files:/var/lib/mysql
+
+secrets:
+  user_name:
+    file: ./db_secrets/user_name
+  user_pw:
+    file: ./db_secrets/user_pw
+  root_pw:
+    file: ./db_secrets/root_pw
