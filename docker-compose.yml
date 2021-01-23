@@ -21,8 +21,8 @@ services:
 
 secrets:
   user_name:
-    file: ./app/secrets/user_name
+    file: ./app/secrets/.user_name
   user_pw:
-    file: ./app/secrets/user_pw
+    file: ./app/secrets/.user_pw
   root_pw:
-    file: ./app/secrets/root_pw
+    file: ./app/secrets/.root_pw
