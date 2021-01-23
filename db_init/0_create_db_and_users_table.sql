@@ -1,5 +1,5 @@
-CREATE DATABASE local_users;
-use local_users;
+CREATE DATABASE local_db;
+use local_db;
 
 CREATE TABLE users (
     id int NOT NULL AUTO_INCREMENT,

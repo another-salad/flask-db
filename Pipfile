@@ -5,6 +5,8 @@ name = "pypi"
 
 [packages]
 flask = "*"
+flask-jwt = "*"
+mysql-connector-python = "*"
 
 [dev-packages]
 
