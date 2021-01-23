@@ -3,12 +3,13 @@ version: "3.4"
 services:
   db:
     image: mysql:latest
-    container_name: mc_server_log_db
+    container_name: mysql_db_1
     restart: always
     environment:
       - MYSQL_USER_FILE=/run/secrets/user_name
       - MYSQL_PASSWORD_FILE=/run/secrets/user_pw
       - MYSQL_ROOT_PASSWORD_FILE=/run/secrets/root_pw
+      - MYSQL_DATABASE=local_db  # .sql files in /db_innit will need to match this
     secrets:
       - user_name
       - user_pw

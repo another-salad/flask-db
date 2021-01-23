@@ -1,4 +1,3 @@
-CREATE DATABASE local_db;
 use local_db;
 
 CREATE TABLE users (

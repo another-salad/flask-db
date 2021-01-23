@@ -4,7 +4,7 @@ from pathlib import Path
 mod_path = Path(__file__).parent.parent
 
 def read_secrets(secret_file_names: list) -> dict:
-    """Reads the file and returns its contents as a string
+    """Reads files and returns their contents
 
     Args:
         secret_file_names (list): A list of filenames from the 'secrets' DIR

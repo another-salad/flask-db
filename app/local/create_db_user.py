@@ -1,14 +1,14 @@
 """Creates a user in the local_users DB"""
 
 import hashlib
-from typing import Dict
 
-import mysql.connector
+from pathlib import Path
+
+from typing import Dict
 
 from argparse import ArgumentParser
 
-def db_conn():
-    pass
+
 
 def create_user(username: str, password: str, read_only: bool = True, create_users: bool = False):
     """Creates a user in the Users DB (created on first time start up)
