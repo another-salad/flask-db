@@ -3,13 +3,6 @@ from pathlib import Path
 # parent DIR to common /app
 mod_path = Path(__file__).parent.parent
 
-def read_secrets() -> dict:
-    """Reads the secret files to fetch the username and password for the DB
-
-    Returns:
-        dict: The DB user's username and password
-    """
-
 def read_secrets(secret_file_names: list) -> dict:
     """Reads the file and returns its contents as a string
 
