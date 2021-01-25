@@ -7,6 +7,7 @@ name = "pypi"
 flask = "*"
 flask-jwt = "*"
 mysql-connector-python = "*"
+bcrypt = "*"
 
 [dev-packages]
 

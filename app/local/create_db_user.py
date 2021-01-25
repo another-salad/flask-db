@@ -1,13 +1,15 @@
 """Creates a user in the local_users DB"""
 
-import hashlib
+from argparse import ArgumentParser
 
 from pathlib import Path
 
 from typing import Dict
 
-from argparse import ArgumentParser
+from bcrypt import gensalt
 
+from ..common.db import DBActions
+from ..common.hashing import hasher
 
 
 def create_user(username: str, password: str, read_only: bool = True, create_users: bool = False):
@@ -20,4 +22,9 @@ def create_user(username: str, password: str, read_only: bool = True, create_use
         create_users (bool): True for the ability to create users, else False (defaults False)
 
     """
-    pass
+    salt = gensalt()
+    hashed_pw = hasher(string=password, salt=salt)
+
+    # Add user to DB
+    with DBActions as db:
+        pass

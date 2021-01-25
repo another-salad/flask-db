@@ -15,7 +15,7 @@ services:
       - user_pw
       - root_pw
     ports:
-      - "3306:3306"
+      - "3307:3306"
     volumes:
       - ./db_init:/docker-entrypoint-initdb.d/:ro
       - ./db_files:/var/lib/mysql

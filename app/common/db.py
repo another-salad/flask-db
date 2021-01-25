@@ -2,9 +2,17 @@ from mysql.connector import connect, errorcode
 
 from secrets import read_secrets
 
+#
+# Long term, these probably need a better place to stay
+#
+# Currently, the db name will need to be edited here, in the .sql files and
+# compose file(s). The open port is here and the compose file(s).
+#
+#
+
 INSTANCE_NAME = "db"  # From docker-compose file
 DB_NAME = "local_db"
-DB_PORT = "3306"
+DB_PORT = "3307"  # From docker-compose file
 DB_UN_FILE = ".user_name"
 DB_UN_PW_FILE = ".user_pw"
 
@@ -24,27 +32,25 @@ class DBConn:
 
     def __enter__(self):
         """Creates the DB connection and returns the cursor object"""
-        self.db_conn = connect(**self.db_config)
-        self.cursor = self.db_conn.cursor()
+        self._db_conn = connect(**self.db_config)
+        self.cursor = self._db_conn.cursor()
         return self
 
     def __exit__(self, exc_type, exc_value, exc_traceback):
         """Closes cursor and DB connection"""
         self.cursor.close()
-        self.db_conn.close()
+        self._db_conn.close()
 
-
-class DBHandler(DBConn):
+class DBActions(DBConn):
 
     def __init__(self) -> None:
         super().__init__()
 
-    def read_table(self):  # Just testing it actually works...
-        data = self.cursor
-        data.execute("SELECT * FROM default_server_active_user_log")
-        result = data.fetchall()
-        print(result)
+    def insert(self, table: str, rows: tuple, values, tuple) -> bool:
+        pass
 
-if __name__ == "__main__":
-    with DBHandler() as db:
-        print(db.read_table())
+    def delete(self):
+        pass
+
+    def select(self):
+        pass
