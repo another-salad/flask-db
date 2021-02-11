@@ -40,4 +40,5 @@ def create_user(username: str, password: str):
 
 if __name__ == "__main__":
     args = parser.parse_args()
-    create_user(args.username, args.password)
+    user_details = create_user(args.username, args.password)
+    print(f"'{user_details[0]}' created")
