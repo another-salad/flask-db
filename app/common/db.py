@@ -1,6 +1,7 @@
 from mysql.connector import connect, errorcode
 
-from secrets import read_secrets
+from common import CREATE_USER_PROC
+from .secret_reader import read_secrets
 
 #
 # Long term, these probably need a better place to stay
@@ -41,16 +42,57 @@ class DBConn:
         self.cursor.close()
         self._db_conn.close()
 
+
 class DBActions(DBConn):
 
     def __init__(self) -> None:
         super().__init__()
 
-    def insert(self, table: str, rows: tuple, values, tuple) -> bool:
-        pass
+    def _call_proc(self, stored_proc: str, values: tuple) -> str:
+        """Calls stored procedures
 
-    def delete(self):
-        pass
+        Args:
+            stored_proc (str): The stored procedure name
+            values (tuple): The args to pass to the stored procedure
 
-    def select(self):
-        pass
+        Returns:
+            str: The returned result or an Error message
+
+        """
+        try:
+
+            call = self.cursor.callproc(stored_proc, values,)
+            self._db_conn.commit()
+
+        except Exception as ex:
+            return str(ex)
+
+        return call
+
+    def put(self, stored_proc: str, values: tuple) -> str:
+        """The put method exposed to Flask. Allows inserts into DB
+
+        Args:
+            stored_proc (str): The stored procedure name
+            values (tuple): The args to pass to the stored procedure
+
+        Returns:
+            str: The returned result or an Error message
+
+        """
+        if stored_proc.lower() == CREATE_USER_PROC:
+            return "DENIED"
+
+        return self._call_proc(stored_proc, values)
+
+    def create_user(self, values: tuple) -> str:
+        """This will not be exposed to flask, local user creation only
+
+        Args:
+            values (tuple): The args to pass to the stored procedure
+
+        Returns:
+            str: The returned result or an Error message
+
+        """
+        return self._call_proc(CREATE_USER_PROC, values)
