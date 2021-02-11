@@ -1,4 +1,4 @@
-from mysql.connector import connect, errorcode
+from mysql.connector import connect
 
 from common import CREATE_USER_PROC
 from .secret_reader import read_secrets
@@ -37,6 +37,10 @@ class DBConn:
         self.cursor = self._db_conn.cursor()
         return self
 
+    def commit(self):
+        """Commits actions to DB"""
+        self._db_conn.commit()
+
     def __exit__(self, exc_type, exc_value, exc_traceback):
         """Closes cursor and DB connection"""
         self.cursor.close()
@@ -45,10 +49,12 @@ class DBConn:
 
 class DBActions(DBConn):
 
+    denied = "!! Denied !!"
+
     def __init__(self) -> None:
         super().__init__()
 
-    def _call_proc(self, stored_proc: str, values: tuple) -> str:
+    def _call_proc(self, stored_proc: str, values: tuple = None) -> str:
         """Calls stored procedures
 
         Args:
@@ -59,17 +65,12 @@ class DBActions(DBConn):
             str: The returned result or an Error message
 
         """
-        try:
+        if values:
+            return self.cursor.callproc(stored_proc, values)
+        else:
+            return self.cursor.callproc(stored_proc)
 
-            call = self.cursor.callproc(stored_proc, values,)
-            self._db_conn.commit()
-
-        except Exception as ex:
-            return str(ex)
-
-        return call
-
-    def put(self, stored_proc: str, values: tuple) -> str:
+    def put(self, stored_proc: str, values: tuple) -> tuple:
         """The put method exposed to Flask. Allows inserts into DB
 
         Args:
@@ -77,12 +78,27 @@ class DBActions(DBConn):
             values (tuple): The args to pass to the stored procedure
 
         Returns:
-            str: The returned result or an Error message
+            tuple: The returned result or an Error message
 
         """
         if stored_proc.lower() == CREATE_USER_PROC:
-            return "DENIED"
+            return False, self.denied
 
+        cmd = self._call_proc(stored_proc, values)
+        self.commit()
+        return cmd
+
+    def get(self, stored_proc: str, values: tuple = None) -> tuple:
+        """The get method exposed to Flask. Gets from DB
+
+        Args:
+            stored_proc (str): The stored procedure name
+            values (tuple): The args to pass to the stored procedure
+
+        Returns:
+            tuple: The returned result or an Error message
+
+        """
         return self._call_proc(stored_proc, values)
 
     def create_user(self, values: tuple) -> str:
