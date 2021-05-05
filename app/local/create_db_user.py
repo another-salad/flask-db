@@ -2,14 +2,11 @@
 
 from argparse import ArgumentParser
 
-from pathlib import Path
-
-from typing import Dict
-
 from bcrypt import gensalt
 
 import os.path
 import sys
+
 sys.path.append(os.path.abspath(os.path.join(os.path.dirname(__file__), os.path.pardir)))
 
 from common.db import DBActions

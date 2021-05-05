@@ -13,7 +13,7 @@ from .secret_reader import read_secrets
 
 INSTANCE_NAME = "db"  # From docker-compose file
 DB_NAME = "local_db"
-DB_PORT = "3307"  # From docker-compose file
+DB_PORT = "3306"  # From docker-compose file
 DB_UN_FILE = ".user_name"
 DB_UN_PW_FILE = ".user_pw"
 
@@ -26,7 +26,7 @@ class DBConn:
         self.db_config = {
             "user": self._creds[DB_UN_FILE],
             "password": self._creds[DB_UN_PW_FILE],
-            "host": "0.0.0.0",  # UPDATE THIS
+            "host": INSTANCE_NAME,  # UPDATE THIS
             "port": DB_PORT,
             "database": DB_NAME
         }
