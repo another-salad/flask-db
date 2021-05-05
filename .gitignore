@@ -127,3 +127,9 @@ dmypy.json
 
 # Pyre type checker
 .pyre/
+
+# Mysql stuff
+/db_files
+
+# Security certs
+*.pem

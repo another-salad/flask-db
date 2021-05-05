@@ -1,0 +1,40 @@
+version: "3.4"
+
+services:
+  flask_dev:
+      build: .
+      container_name: flask_dev_env
+      restart: always
+      volumes:
+          - "./app:/app"
+          - "./.vscode:/app.vscode"
+      environment:
+          TZ: "Europe/London"
+      links:
+        - db
+      command: tail -F anything  # keeps the container running
+
+  db:
+    image: mysql:latest
+    container_name: mysql_db_1
+    restart: always
+    environment:
+      - MYSQL_USER_FILE=/run/secrets/user_name
+      - MYSQL_PASSWORD_FILE=/run/secrets/user_pw
+      - MYSQL_ROOT_PASSWORD_FILE=/run/secrets/root_pw
+      - MYSQL_DATABASE=local_db  # .sql files in /db_innit will need to match this
+    secrets:
+      - user_name
+      - user_pw
+      - root_pw
+    volumes:
+      - ./db_init:/docker-entrypoint-initdb.d/:ro
+      - ./db_files:/var/lib/mysql
+
+secrets:
+  user_name:
+    file: ./app/secrets/.user_name
+  user_pw:
+    file: ./app/secrets/.user_pw
+  root_pw:
+    file: ./app/secrets/.root_pw
