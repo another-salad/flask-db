@@ -9,7 +9,7 @@ CREATE PROCEDURE create_user(
 )
 
 BEGIN
-	INSERT INTO users (un, pw, salt) VALUES (p_un, p_pw, p_salt);
+	INSERT INTO users (un, pw_hash, salt) VALUES (p_un, p_pw, p_salt);
 END$$
 
 DELIMITER ;

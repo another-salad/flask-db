@@ -9,7 +9,7 @@ CREATE PROCEDURE get_user(
 )
 
 BEGIN
-    SELECT pw, salt INTO p_pw, p_salt FROM users WHERE un = p_un;
+    SELECT pw_hash, salt INTO p_pw, p_salt FROM users WHERE un = p_un;
 END$$
 
 DELIMITER ;
