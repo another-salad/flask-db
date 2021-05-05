@@ -111,4 +111,6 @@ class DBActions(DBConn):
             str: The returned result or an Error message
 
         """
-        return self._call_proc(CREATE_USER_PROC, values)
+        cmd = self._call_proc(CREATE_USER_PROC, values)
+        self.commit()
+        return cmd
