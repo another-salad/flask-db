@@ -49,8 +49,6 @@ class DBConn:
 
 class DBActions(DBConn):
 
-    denied = "!! Denied !!"
-
     def __init__(self) -> None:
         super().__init__()
 
@@ -82,11 +80,11 @@ class DBActions(DBConn):
 
         """
         if stored_proc.lower() == CREATE_USER_PROC:
-            return False, self.denied
+            return False, "denied"
 
         cmd = self._call_proc(stored_proc, values)
         self.commit()
-        return cmd
+        return True, cmd
 
     def get(self, stored_proc: str, values: tuple = None) -> tuple:
         """The get method exposed to Flask. Gets from DB
