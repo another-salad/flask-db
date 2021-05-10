@@ -1,14 +1,23 @@
-from hashlib import sha512
+from bcrypt import hashpw, checkpw, gensalt
 
-def hasher(string: str, salt: str, encoding: str = 'utf-8') -> str:
+def hasher(string: str) -> str:
     """Hashes a string with a salty salt, default encoding of utf-8 (we live in a modern world)
 
     Args:
         string (str): The string to hash.
-        salt (str): Some additional salt.
-        encoding (str, optional): Defaults to 'utf-8'.
 
     Returns:
         str: The hashed string
     """
-    return sha512(str(string).encode(encoding) + str(salt).encode(encoding)).hexdigest()
+    return hashpw(str(string).encode('utf8'), gensalt(rounds=15))
+
+def validate(plain_string: str, hashed_string: str) -> bool:
+    """
+    Args:
+        plain_string (str): the provided string
+        hashed_string (str): a pre-generated hashed string
+
+    Returns:
+        bool: True if strings match else False
+    """
+    return checkpw(password=str(plain_string).encode('utf8'), hashed_password=hashed_string.encode('utf8'))

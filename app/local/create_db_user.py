@@ -2,8 +2,6 @@
 
 from argparse import ArgumentParser
 
-from bcrypt import gensalt
-
 import os.path
 import sys
 
@@ -28,12 +26,10 @@ def create_user(username: str, password: str):
         password (str): The password (255 char limit)
 
     """
-    salt = gensalt()
-    hashed_pw = hasher(string=password, salt=salt)
-
+    hashed_pw = hasher(string=password)
     # Add user to DB
     with DBActions() as db:
-        return db.create_user((username, hashed_pw, salt))
+        return db.create_user((username, hashed_pw))
 
 if __name__ == "__main__":
     args = parser.parse_args()
