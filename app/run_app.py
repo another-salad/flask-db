@@ -1,15 +1,21 @@
 from flask import Flask, jsonify, request
-from flask_jwt import JWT, jwt_required, current_identity
+
+from flask_jwt_extended import create_access_token
+from flask_jwt_extended import get_jwt_identity
+from flask_jwt_extended import jwt_required
+from flask_jwt_extended import JWTManager
 
 from schema import Schema, SchemaError
 
-from common import ERROR_KEY, GET_USER_PROC
+from common import ERROR_KEY, GET_USER_PROC, SECRET_KEY
 from common.db import DBActions
 from common.error_enums import ErrorCodes
 from common.hashing import validate_pw
 
 
 app = Flask(__name__, static_url_path="") # flask object
+app.config["JWT_SECRET_KEY"] = SECRET_KEY
+jwt = JWTManager(app)
 
 
 def validate_input(schema, input_data):
@@ -41,6 +47,7 @@ def validate_input(schema, input_data):
 
     return error, return_data
 
+
 @app.route("/test")
 def test_flask() -> str:
     """
@@ -59,6 +66,7 @@ def authenticate() -> str:
     :return: JSON string
     """
     return_dict = {}
+    status_code = 401
     error_code, data = validate_input(authenticate_schema, request)
     if error_code == 0:
         with DBActions() as db:
@@ -73,21 +81,29 @@ def authenticate() -> str:
             if not validate_pw(data["password"], pw_hash):
                 return_dict.update({ERROR_KEY: ErrorCodes.INCORRECT_PASSWORD})
             else:
-                return_dict.update({ERROR_KEY: ErrorCodes.SUCCESS})
+                return_dict.update(
+                    {
+                        ERROR_KEY: ErrorCodes.SUCCESS,
+                        "access_token": create_access_token(identity=data["username"])
+                    }
+                )
+                status_code = 200
     else:
         return_dict.update({ERROR_KEY: error_code})
 
-    return jsonify(return_dict)
+    return jsonify(return_dict), status_code
 
 
 db_schema = Schema({"proc": str, "args": tuple})
-@app.route("/get")
+@app.route("/get", methods=["GET"])
+@jwt_required()
 def get() -> str:
     """
     simply for test
     :return: str
     """
-    return jsonify({"auth": ErrorCodes.SUCCESS})
+    current_user = get_jwt_identity()
+    return jsonify(logged_in_as=current_user), 200
 
 
 @app.route("/put")
