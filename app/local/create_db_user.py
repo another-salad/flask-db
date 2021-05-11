@@ -18,7 +18,7 @@ parser = ArgumentParser(
 parser.add_argument("username", type=str, help="The username")
 parser.add_argument("password", type=str, help="The password")
 
-def create_user(username: str, password: str):
+def create_user(username: str, password: str) -> tuple:
     """Creates a user in the Users DB (created on first time start up)
 
     Args:

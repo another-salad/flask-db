@@ -1,5 +1,6 @@
 from bcrypt import hashpw, checkpw, gensalt
 
+
 def hasher(string: str) -> str:
     """Hashes a string with a salty salt, default encoding of utf-8 (we live in a modern world)
 
@@ -11,8 +12,11 @@ def hasher(string: str) -> str:
     """
     return hashpw(str(string).encode('utf8'), gensalt(rounds=15))
 
-def validate(plain_string: str, hashed_string: str) -> bool:
+
+def validate_pw(plain_string: str, hashed_string: str) -> bool:
     """
+    Validates password against a hashed_string from the DB
+
     Args:
         plain_string (str): the provided string
         hashed_string (str): a pre-generated hashed string

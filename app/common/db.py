@@ -52,7 +52,7 @@ class DBActions(DBConn):
     def __init__(self) -> None:
         super().__init__()
 
-    def _call_proc(self, stored_proc: str, values: tuple = None) -> str:
+    def _call_proc(self, stored_proc: str, values: tuple = None) -> tuple:
         """Calls stored procedures
 
         Args:
@@ -60,7 +60,7 @@ class DBActions(DBConn):
             values (tuple): The args to pass to the stored procedure
 
         Returns:
-            str: The returned result or an Error message
+            tuple: The returned result or an Exception
 
         """
         if values:
@@ -76,7 +76,7 @@ class DBActions(DBConn):
             values (tuple): The args to pass to the stored procedure
 
         Returns:
-            tuple: The returned result or an Error message
+            tuple: The returned result or an Exception
 
         """
         if stored_proc.lower() == CREATE_USER_PROC:
@@ -94,19 +94,19 @@ class DBActions(DBConn):
             values (tuple): The args to pass to the stored procedure
 
         Returns:
-            tuple: The returned result or an Error message
+            tuple: The returned result or an Exception
 
         """
         return self._call_proc(stored_proc, values)
 
-    def create_user(self, values: tuple) -> str:
+    def create_user(self, values: tuple) -> tuple:
         """This will not be exposed to flask, local user creation only
 
         Args:
             values (tuple): The args to pass to the stored procedure
 
         Returns:
-            str: The returned result or an Error message
+            tuple: The returned result or an Exception
 
         """
         cmd = self._call_proc(CREATE_USER_PROC, values)
