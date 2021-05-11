@@ -9,7 +9,7 @@ from schema import Schema, SchemaError
 
 from common import ERROR_KEY, GET_USER_PROC, SECRET_KEY
 from common.db import DBActions
-from common.error_enums import ErrorCodes
+from common.enums import ErrorCodes, HTTPStatusCodes
 from common.hashing import validate_pw
 
 
@@ -66,7 +66,7 @@ def authenticate() -> str:
     :return: JSON string
     """
     return_dict = {}
-    status_code = 401
+    status_code = HTTPStatusCodes.UNAUTHORIZED
     error_code, data = validate_input(authenticate_schema, request)
     if error_code == 0:
         with DBActions() as db:
@@ -81,13 +81,8 @@ def authenticate() -> str:
             if not validate_pw(data["password"], pw_hash):
                 return_dict.update({ERROR_KEY: ErrorCodes.INCORRECT_PASSWORD})
             else:
-                return_dict.update(
-                    {
-                        ERROR_KEY: ErrorCodes.SUCCESS,
-                        "access_token": create_access_token(identity=data["username"])
-                    }
-                )
-                status_code = 200
+                return_dict.update({ERROR_KEY: ErrorCodes.SUCCESS, "access_token": create_access_token(identity=data["username"])})
+                status_code = HTTPStatusCodes.OK
     else:
         return_dict.update({ERROR_KEY: error_code})
 
