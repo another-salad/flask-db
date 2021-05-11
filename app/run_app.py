@@ -29,10 +29,7 @@ def authenticate() -> str:
     :return: str
     """
     return_dict = {"login": False, "error_msg": None}
-
-    if not request.is_json:
-        return_dict.update({"error_msg": f"Args must be JSON not: {str(request)}"})
-    else:
+    if request.is_json:
         try:
 
             data = request.get_json()
@@ -42,9 +39,11 @@ def authenticate() -> str:
             return_dict.update({"error_msg": "JSON schema not met"})
         else:
             with DBActions() as db:
-                result = db.get(stored_proc="get_user", values=tuple([data["username"], None]))
+                username, pw_hash = db.get(
+                    stored_proc="get_user",
+                    values=tuple([data["username"], None])
+                )
 
-            username, pw_hash = result
             if not pw_hash:
                 return_dict.update({"error_msg": f"Unkown user: {username}"})
             else:
@@ -52,6 +51,8 @@ def authenticate() -> str:
                     return_dict.update({"error_msg": "incorrect password"})
                 else:
                     return_dict.update({"login": True})
+    else:
+        return_dict.update({"error_msg": f"Args must be JSON not: {str(request)}"})
 
     return jsonify(return_dict)
 
