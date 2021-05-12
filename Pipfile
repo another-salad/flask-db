@@ -9,7 +9,6 @@ verify_ssl = true
 
 [packages]
 Flask = "==1.1.2"
-Flask-JWT = "==0.3.2"
 mysql-connector-python = "==8.0.23"
 bcrypt = "*"
 cffi = "==1.14.4"
@@ -19,10 +18,11 @@ Jinja2 = "==2.11.2"
 MarkupSafe = "==1.1.1"
 protobuf = "==3.14.0"
 pycparser = "==2.20"
-PyJWT = "==1.4.2"
 six = "==1.15.0"
 Werkzeug = "==1.0.1"
 schema = "*"
+flask-jwt-extended = "*"
+flask = "*"
 
 [dev-packages]
 
