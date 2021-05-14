@@ -6,6 +6,7 @@ class ErrorCodes(IntEnum):
     SCHEMA = 2
     UNKNOWN_USER = 3
     INCORRECT_PASSWORD = 4
+    UNKNOWN_METHOD = 5
 
 class HTTPStatusCodes(IntEnum):
     OK = 200

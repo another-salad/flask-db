@@ -64,12 +64,18 @@ class DBActions(DBConn):
 
         """
         if values:
-            return self.cursor.callproc(stored_proc, values)
+            return_data =  self.cursor.callproc(stored_proc, values)
         else:
-            return self.cursor.callproc(stored_proc)
+            return_data = self.cursor.callproc(stored_proc)
 
-    def put(self, stored_proc: str, values: tuple) -> tuple:
-        """The put method exposed to Flask. Allows inserts into DB
+        stored_res = next((i.fetchall() for i in self.cursor.stored_results()), None)
+        if stored_res:
+            return_data = stored_res
+
+        return return_data
+
+    def set(self, stored_proc: str, values: tuple) -> tuple:
+        """The set method exposed to Flask. Allows inserts into DB
 
         Args:
             stored_proc (str): The stored procedure name

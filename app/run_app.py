@@ -1,3 +1,5 @@
+from re import search
+
 from flask import Flask, jsonify, request
 
 from flask_jwt_extended import create_access_token
@@ -89,25 +91,29 @@ def authenticate() -> str:
     return jsonify(return_dict), status_code
 
 
-db_schema = Schema({"proc": str, "args": tuple})
-@app.route("/get", methods=["GET"])
+db_schema = Schema({"proc": str, "args": list})
+@app.route("/call", methods=["POST"])
 @jwt_required()
-def get() -> str:
+def call() -> str:
     """
     simply for test
     :return: str
     """
-    current_user = get_jwt_identity()
-    return jsonify(logged_in_as=current_user), 200
+    # TODO: SORT OUT HTTP STATUS CODES
+    res = None
+    status_code = HTTPStatusCodes.OK
+    error_code, data = validate_input(db_schema, request)
+    if error_code == 0:
+        attr_call = search(r"(?P<attr>get|set)_", data["proc"])
+        if not attr_call:
+            error_code = ErrorCodes.UNKNOWN_METHOD
+        else:
+            attr_call = attr_call.group("attr")
+            with DBActions() as db:
+                if hasattr(db, attr_call):
+                    res = getattr(db, attr_call)(stored_proc=data["proc"], values=tuple(data["args"]))
 
-
-@app.route("/put")
-def put() -> str:
-    """
-    simply for test
-    :return: str
-    """
-    return "<h1>TEST PAGE</h1>"
+    return jsonify({"response": res, ERROR_KEY: error_code}), status_code
 
 
 if __name__ == "__main__":
