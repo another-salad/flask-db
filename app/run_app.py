@@ -87,6 +87,7 @@ def authenticate() -> str:
                 status_code = HTTPStatusCodes.OK
     else:
         return_dict.update({ERROR_KEY: error_code})
+        status_code = HTTPStatusCodes.BAD_REQUEST
 
     return jsonify(return_dict), status_code
 
@@ -99,19 +100,27 @@ def call() -> str:
     simply for test
     :return: str
     """
-    # TODO: SORT OUT HTTP STATUS CODES
     res = None
+    error_occurred = True
     status_code = HTTPStatusCodes.OK
     error_code, data = validate_input(db_schema, request)
     if error_code == 0:
         attr_call = search(r"(?P<attr>get|set)_", data["proc"])
-        if not attr_call:
-            error_code = ErrorCodes.UNKNOWN_METHOD
+        if (not attr_call) or (not hasattr(DBActions, attr_call.group("attr"))):
+            error_code = ErrorCodes.ATTRIB_ERROR
         else:
             attr_call = attr_call.group("attr")
             with DBActions() as db:
-                if hasattr(db, attr_call):
+                try:
+
                     res = getattr(db, attr_call)(stored_proc=data["proc"], values=tuple(data["args"]))
+                    error_occurred = False
+
+                except Exception:
+                    error_code = ErrorCodes.VALUE_ERROR
+
+    if error_occurred:
+        status_code = HTTPStatusCodes.BAD_REQUEST
 
     return jsonify({"response": res, ERROR_KEY: error_code}), status_code
 
