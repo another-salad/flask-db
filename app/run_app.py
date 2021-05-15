@@ -2,10 +2,7 @@ from re import search
 
 from flask import Flask, jsonify, request
 
-from flask_jwt_extended import create_access_token
-from flask_jwt_extended import get_jwt_identity
-from flask_jwt_extended import jwt_required
-from flask_jwt_extended import JWTManager
+from flask_jwt_extended import create_access_token, jwt_required, JWTManager
 
 from schema import Schema, SchemaError
 
@@ -13,22 +10,25 @@ from common import ERROR_KEY, GET_USER_PROC, SECRET_KEY
 from common.db import DBActions
 from common.enums import ErrorCodes, HTTPStatusCodes
 from common.hashing import validate_pw
+from common.json_encoder import DecimalJsonEncoder
 
 
 app = Flask(__name__, static_url_path="") # flask object
 app.config["JWT_SECRET_KEY"] = SECRET_KEY
+app.json_encoder = DecimalJsonEncoder
 jwt = JWTManager(app)
 
 
 def validate_input(schema, input_data):
     """
+    JSON input validator
 
     Args:
-        schema ([type]): [description]
-        input_data ([type]): [description]
+        schema (Schema): The Schema object
+        input_data (request): The flask request object
 
     Returns:
-        [type]: [description]
+        [tuple]: int (Enum error code), dict or None (on error)
     """
     error = None
     return_data = None
@@ -50,22 +50,13 @@ def validate_input(schema, input_data):
     return error, return_data
 
 
-@app.route("/test")
-def test_flask() -> str:
-    """
-    simply for test
-    :return: str
-    """
-    return "<h1>TEST PAGE</h1>"
-
-
 authenticate_schema = Schema({"username": str, "password": str})
 @app.route("/auth", methods=["POST"])
-def authenticate() -> str:
+def authenticate() -> tuple:
     """
     Authenticates the user
 
-    :return: JSON string
+    :return tuple: (JSON string: JWT, Error code), HTTP error code
     """
     return_dict = {}
     status_code = HTTPStatusCodes.UNAUTHORIZED
@@ -95,10 +86,14 @@ def authenticate() -> str:
 db_schema = Schema({"proc": str, "args": list})
 @app.route("/call", methods=["POST"])
 @jwt_required()
-def call() -> str:
+def call() -> tuple:
     """
-    simply for test
-    :return: str
+    Excepts set or get DB calls
+
+    :param string proc: The name of the stored procedure being called
+    :param list args: The args for the stored param (including out variables (if required))
+
+    :return tuple: (JSON string: Query results, Error code), HTTP error code
     """
     res = None
     error_occurred = True
