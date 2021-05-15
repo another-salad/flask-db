@@ -11,7 +11,7 @@ services:
     environment:
       TZ: "Europe/London"
     ports:
-      - "80:80"
+      - "8008:80"
     links:
       - db
     command: tail -F anything  # keeps the container running

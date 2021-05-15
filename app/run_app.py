@@ -6,7 +6,7 @@ from flask_jwt_extended import create_access_token, jwt_required, JWTManager
 
 from schema import Schema, SchemaError
 
-from common import ERROR_KEY, GET_USER_PROC, SECRET_KEY
+from common import ERROR_KEY, GET_USER_PROC, SECRET_KEY, DEBUG, IP, PORT
 from common.db import DBActions
 from common.enums import ErrorCodes, HTTPStatusCodes
 from common.hashing import validate_pw
@@ -25,7 +25,7 @@ def validate_input(schema, input_data):
 
     Args:
         schema (Schema): The Schema object
-        input_data (request): The flask request object
+        input_data (flask.request): The flask request object
 
     Returns:
         [tuple]: int (Enum error code), dict or None (on error)
@@ -121,4 +121,4 @@ def call() -> tuple:
 
 
 if __name__ == "__main__":
-    app.run(host="0.0.0.0", port=80, debug=True)
+    app.run(host=IP, port=PORT, debug=DEBUG)
