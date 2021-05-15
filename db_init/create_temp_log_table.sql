@@ -2,7 +2,8 @@ use local_db;
 
 CREATE TABLE temp_data (
     id int NOT NULL AUTO_INCREMENT PRIMARY KEY,
-    temp VARCHAR(10) NOT NULL,
-    error VARCHAR(255),
+    temp FLOAT NOT NULL,
+    error BOOLEAN NOT NULL,
+    loc VARCHAR(255) NOT NULL,
     update_date DATETIME DEFAULT CURRENT_TIMESTAMP
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8;
