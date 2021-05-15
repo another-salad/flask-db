@@ -1,4 +1,4 @@
-version: "3.4"
+version: "3"
 
 services:
   flask_mysql:
@@ -6,9 +6,11 @@ services:
     container_name: flask_mysql
     restart: always
     volumes:
-        - "./app:/app"
+      - "./app:/app"
     environment:
-        TZ: "Europe/London"
+      TZ: "Europe/London"
+    ports:
+      - "80:80"
     links:
       - db
     command: python /app/run_app.py

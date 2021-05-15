@@ -1,18 +1,20 @@
-version: "3.4"
+version: "3"
 
 services:
   flask_dev:
-      build: .
-      container_name: flask_dev_env
-      restart: always
-      volumes:
-          - "./app:/app"
-          - "./.vscode:/app.vscode"
-      environment:
-          TZ: "Europe/London"
-      links:
-        - db
-      command: tail -F anything  # keeps the container running
+    build: .
+    container_name: flask_dev_env
+    restart: always
+    volumes:
+      - "./app:/app"
+      - "./.vscode:/app.vscode"
+    environment:
+      TZ: "Europe/London"
+    ports:
+      - "8008:80"
+    links:
+      - db
+    command: tail -F anything  # keeps the container running
 
   db:
     image: mysql:latest

@@ -52,7 +52,7 @@ class DBActions(DBConn):
     def __init__(self) -> None:
         super().__init__()
 
-    def _call_proc(self, stored_proc: str, values: tuple = None) -> str:
+    def _call_proc(self, stored_proc: str, values: tuple = None) -> tuple:
         """Calls stored procedures
 
         Args:
@@ -60,23 +60,29 @@ class DBActions(DBConn):
             values (tuple): The args to pass to the stored procedure
 
         Returns:
-            str: The returned result or an Error message
+            tuple: The returned result or an Exception
 
         """
         if values:
-            return self.cursor.callproc(stored_proc, values)
+            return_data =  self.cursor.callproc(stored_proc, values)
         else:
-            return self.cursor.callproc(stored_proc)
+            return_data = self.cursor.callproc(stored_proc)
 
-    def put(self, stored_proc: str, values: tuple) -> tuple:
-        """The put method exposed to Flask. Allows inserts into DB
+        stored_res = next((i.fetchall() for i in self.cursor.stored_results()), None)
+        if stored_res:
+            return_data = stored_res
+
+        return return_data
+
+    def set(self, stored_proc: str, values: tuple) -> tuple:
+        """The set method exposed to Flask. Allows inserts into DB
 
         Args:
             stored_proc (str): The stored procedure name
             values (tuple): The args to pass to the stored procedure
 
         Returns:
-            tuple: The returned result or an Error message
+            tuple: The returned result or an Exception
 
         """
         if stored_proc.lower() == CREATE_USER_PROC:
@@ -94,19 +100,19 @@ class DBActions(DBConn):
             values (tuple): The args to pass to the stored procedure
 
         Returns:
-            tuple: The returned result or an Error message
+            tuple: The returned result or an Exception
 
         """
         return self._call_proc(stored_proc, values)
 
-    def create_user(self, values: tuple) -> str:
+    def create_user(self, values: tuple) -> tuple:
         """This will not be exposed to flask, local user creation only
 
         Args:
             values (tuple): The args to pass to the stored procedure
 
         Returns:
-            str: The returned result or an Error message
+            tuple: The returned result or an Exception
 
         """
         cmd = self._call_proc(CREATE_USER_PROC, values)
