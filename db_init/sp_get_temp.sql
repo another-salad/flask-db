@@ -7,7 +7,7 @@ CREATE PROCEDURE get_temp(
 )
 
 BEGIN
-	SELECT temp, error, loc, update_date FROM temp_data LIMIT num_rows;
+	SELECT temp, error, loc, update_date FROM temp_data ORDER BY update_date DESC LIMIT num_rows;
 END$$
 
 DELIMITER ;
