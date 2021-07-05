@@ -24,6 +24,7 @@ services:
       - MYSQL_PASSWORD_FILE=/run/secrets/user_pw
       - MYSQL_ROOT_PASSWORD_FILE=/run/secrets/root_pw
       - MYSQL_DATABASE=local_db  # .sql files in /db_innit will need to match this
+      - TZ=Europe/London
     secrets:
       - user_name
       - user_pw
