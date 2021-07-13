@@ -8,8 +8,8 @@ services:
     container_name: flask_dev_tests
     volumes:
       - "./tests:/tests"
-      - "./tests/app:/app"
-      - "./.vscode:/app.vscode"
+      - "./app:/tests/app"
+      - "./.vscode:/.vscode"
     environment:
       TZ: "Europe/London"
     command: tail -F anything  # keeps the container running
