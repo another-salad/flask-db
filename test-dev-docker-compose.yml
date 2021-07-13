@@ -5,7 +5,7 @@ services:
     build:
         context: .
         dockerfile: Dockerfile.tests
-    container_name: flask_dev_tests
+    container_name: flask_dev_testing
     volumes:
       - "./tests:/tests"
       - "./app:/app"
