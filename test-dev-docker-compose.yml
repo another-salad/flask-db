@@ -8,7 +8,7 @@ services:
     container_name: flask_dev_tests
     volumes:
       - "./tests:/tests"
-      - "./app:/tests/app"
+      - "./app:/app"
       - "./.vscode:/.vscode"
     environment:
       TZ: "Europe/London"

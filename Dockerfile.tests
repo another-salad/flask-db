@@ -10,8 +10,12 @@ RUN apt-get update \
 COPY tests-requirements.txt /
 RUN pip3 install -r tests-requirements.txt
 
-# CREATE TESTS AND APP DIRS
+# CREATE APP DIR AND COPY
+RUN mkdir app
+COPY app /app
+
+# CREATE TESTS DIR AND COPY
 RUN mkdir tests
 COPY tests /tests
-COPY app /tests/app
+
 WORKDIR /tests
