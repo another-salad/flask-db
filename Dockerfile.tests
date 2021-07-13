@@ -18,4 +18,8 @@ COPY app /app
 RUN mkdir tests
 COPY tests /tests
 
-WORKDIR /tests
+# COPY RUN_TESTS FILE AND PYLINTRC
+COPY run_tests.py /
+COPY .pylintrc /
+
+WORKDIR /
