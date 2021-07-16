@@ -3,7 +3,7 @@ node {
     def customImage = docker.build("flask-db-test-env", "-f Dockerfile.tests .")
     customImage.inside {
         stage('Run tests') {
-            sh 'python run_tests.py'
+            sh 'python /tests/run_tests.py'
         }
     }
 }

@@ -18,8 +18,11 @@ COPY app /app
 RUN mkdir tests
 COPY tests /tests
 
+WORKDIR /tests
+
 # COPY PYLINTRC AND __INIT__.PY
 COPY .pylintrc /
 COPY __init__.py /
 
-WORKDIR /tests
+# PYLINT
+ENV PYLINTHOME=.
