@@ -1,0 +1,28 @@
+FROM python:3.8.9-slim-buster
+
+# UPDATE/UPGRADE PACKAGES, INSTALL PIP, TZ
+RUN apt-get update \
+    && apt-get upgrade -y \
+    && apt-get install tzdata -y \
+    && pip3 install --upgrade pip
+
+# INSTALL REQUIREMENTS
+COPY tests-requirements.txt /
+RUN pip3 install -r tests-requirements.txt
+
+# CREATE APP DIR AND COPY
+RUN mkdir app
+COPY app /app
+
+# CREATE TESTS DIR AND COPY
+RUN mkdir tests
+COPY tests /tests
+
+WORKDIR /tests
+
+# COPY PYLINTRC AND __INIT__.PY
+COPY .pylintrc /
+COPY __init__.py /
+
+# PYLINT
+ENV PYLINTHOME=.
