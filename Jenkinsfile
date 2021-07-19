@@ -10,6 +10,8 @@ node {
                 error 'Tests failed'
             } finally {
                 stage('Notify') {
+                    echo currentBuild.result
+                    println currentBuild.result
                     if (currentBuild.result == 'FAILED') {
                         postNotification()
                     }
