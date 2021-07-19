@@ -1,19 +1,17 @@
 node {
-    checkout scm
-    def customImage = docker.build('flask-db-test-env', '-f Dockerfile.tests .')
+    checkout scm;
+    def customImage = docker.build('flask-db-test-env', '-f Dockerfile.tests .');
     customImage.inside {
         stage('Run tests') {
             try {
-                sh 'python /tests/run_tests.py'
+                sh 'python /tests/run_tests.py';
             } catch (e) {
-                currentBuild.result = 'FAILED'
-                error 'Tests failed'
+                currentBuild.result = 'FAILED';
+                throw e;
             } finally {
                 stage('Notify') {
-                    echo currentBuild.result
-                    println currentBuild.result
-                    if (currentBuild.result == 'FAILED') {
-                        postNotification()
+                    if (currentBuild.result == 'FAILURE') {
+                        postNotification();
                     }
                 }
             }
@@ -27,6 +25,6 @@ void postNotification() {
             curl -X POST -H "Content-Type: application/json" -d \
             '{"text_str": "FLASK-DB TEST FAILURE", "text_color": [0, 50, 50],"back_color": [150, 50, 0],"scroll": 0.1}' \
             ${env.resource_name}\
-            """
+            """;
     }
 }
