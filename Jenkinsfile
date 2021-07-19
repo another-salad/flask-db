@@ -7,6 +7,7 @@ node {
                 sh 'python /tests/run_tests.py'
             } catch (e) {
                 currentBuild.result = 'FAILED'
+                throw e
             }
         }
         stage('Notify') {
