@@ -10,7 +10,7 @@ node {
             }
         }
         stage('Notify') {
-            if (currentBuild.currentResult == 'FAILURE') {
+            if (currentBuild.result == 'FAILED') {
                 lock(label: 'piHat', variable: 'resource_name') {
                     sh """\
                         curl -X POST -H "Content-Type: application/json" -d \
