@@ -7,6 +7,11 @@ node {
                 sh 'python /tests/run_tests.py'
             } catch (e) {
                 currentBuild.result = 'FAILED'
+                throw e
+            }
+        }
+        stage('Notify') {
+            if (currentBuild.currentResult == 'FAILURE') {
                 lock(label: 'piHat', variable: 'resource_name') {
                     sh """\
                         curl -X POST -H "Content-Type: application/json" -d \
@@ -14,7 +19,6 @@ node {
                         ${env.resource_name}\
                         """
                 }
-                throw e
             }
         }
     }
