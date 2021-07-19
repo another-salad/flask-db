@@ -10,7 +10,7 @@ node {
                 error 'Tests failed'
             } finally {
                 stage('Notify') {
-                    if (currentBuild.result = 'FAILED') {
+                    if (currentBuild.result == 'FAILED') {
                         postNotification()
                     }
                 }
