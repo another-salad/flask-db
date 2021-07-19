@@ -13,7 +13,7 @@ node {
             sh """\
                 curl -X POST -H "Content-Type: application/json" -d \
                 '{"text_str": "FLASK-DB TEST FAILURE", "text_color": [0, 50, 50],"back_color": [150, 50, 0],"scroll": 0.1}' \
-                ${env.label}\
+                ${env.resource_name}\
                 """
         }
         throw e
