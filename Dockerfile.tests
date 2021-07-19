@@ -1,9 +1,10 @@
 FROM python:3.8.9-slim-buster
 
-# UPDATE/UPGRADE PACKAGES, INSTALL PIP, TZ
+# UPDATE/UPGRADE PACKAGES, INSTALL PIP, TZ, CURL
 RUN apt-get update \
     && apt-get upgrade -y \
     && apt-get install tzdata -y \
+    && apt-get install curl -y \
     && pip3 install --upgrade pip
 
 # INSTALL REQUIREMENTS
