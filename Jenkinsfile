@@ -2,17 +2,17 @@ node {
     checkout scm;
     def customImage = docker.build('flask-db-test-env', '-f Dockerfile.tests .');
     customImage.inside {
-        stage('Run tests') {
-            try {
+        try {
+            stage('Run tests') {
                 sh 'python /tests/run_tests.py';
-            } catch (e) {
-                currentBuild.result = 'FAILED';
-                throw e;
-            } finally {
-                stage('Notify') {
-                    if (currentBuild.result == 'FAILURE') {
-                        postNotification();
-                    }
+            }
+        } catch (e) {
+            currentBuild.result = 'FAILED';
+            throw e;
+        } finally {
+            stage('Notify') {
+                if (currentBuild.result == 'FAILURE') {
+                    postNotification();
                 }
             }
         }
