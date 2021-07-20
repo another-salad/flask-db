@@ -7,8 +7,8 @@ services:
     restart: always
     volumes:
       - "./app:/app"
-      - "./.vscode:/app.vscode"
-      - ".pylintrc:/"
+      - "./.vscode:/app/.vscode/"
+      - ".pylintrc:/app/.pylintrc"
     environment:
       TZ: "Europe/London"
     ports:

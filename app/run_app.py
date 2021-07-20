@@ -1,3 +1,5 @@
+"""Main flask application"""
+
 from re import search
 
 from flask import Flask, jsonify, request
@@ -111,7 +113,7 @@ def call() -> tuple:
                     res = getattr(db, attr_call)(stored_proc=data["proc"], values=tuple(data["args"]))
                     error_occurred = False
 
-                except Exception:
+                except Exception: # pylint: disable=broad-except
                     error_code = ErrorCodes.VALUE_ERROR
 
     if error_occurred:

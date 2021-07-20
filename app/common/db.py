@@ -1,3 +1,5 @@
+"""The Database wrapper"""
+
 from mysql.connector import connect
 
 from common import CREATE_USER_PROC
@@ -19,8 +21,11 @@ DB_UN_PW_FILE = ".user_pw"
 
 
 class DBConn:
+    """Handles DB connections, must be used with a context manger"""
 
     _creds = read_secrets(secret_file_names=[DB_UN_FILE, DB_UN_PW_FILE])
+    _db_conn = None
+    cursor = None
 
     def __init__(self) -> None:
         self.db_config = {
@@ -48,9 +53,7 @@ class DBConn:
 
 
 class DBActions(DBConn):
-
-    def __init__(self) -> None:
-        super().__init__()
+    """The allowed DB actions"""
 
     def _call_proc(self, stored_proc: str, values: tuple = None) -> tuple:
         """Calls stored procedures
