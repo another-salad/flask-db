@@ -1,3 +1,5 @@
+"""Password hasher and validation functions"""
+
 from bcrypt import hashpw, checkpw, gensalt
 
 

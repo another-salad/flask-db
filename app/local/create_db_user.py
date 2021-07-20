@@ -7,6 +7,7 @@ import sys
 
 sys.path.append(os.path.abspath(os.path.join(os.path.dirname(__file__), os.path.pardir)))
 
+# pylint: disable=wrong-import-position
 from common.db import DBActions
 from common.hashing import hasher
 
